@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="drive_dark_green">#1B4332</color>
+    <color name="drive_medium_green">#2D6A4F</color>
+    <color name="drive_light_green">#D8F3DC</color>
+    <color name="hint_color">#95A5A6</color>
+    <color name="input_border">#E0E0E0</color>
 </resources>
