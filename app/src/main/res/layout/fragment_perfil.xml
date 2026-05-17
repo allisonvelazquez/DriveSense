@@ -1,0 +1,237 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="24dp"
+    android:background="#F8F9FA">
+
+    <TextView
+        android:id="@+id/tvTituloPerfil"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="Mi Perfil"
+        android:textColor="#222222"
+        android:textSize="26sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardUsuario"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:layout_constraintTop_toBottomOf="@id/tvTituloPerfil"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp">
+
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/ivFotoPerfil"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:src="@android:drawable/sym_def_app_icon"
+                android:background="#E9ECEF"
+                android:padding="8dp"
+                app:shapeAppearanceOverlay="@style/CircleImage"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginStart="16dp"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@id/ivFotoPerfil"
+                app:layout_constraintEnd_toEndOf="parent">
+
+                <TextView
+                    android:id="@+id/tvNombreUsuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Allison Velazquez"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="#333333" />
+
+                <TextView
+                    android:id="@+id/tvCorreoUsuario"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="allison.velazquez@mail.com"
+                    android:textSize="14sp"
+                    android:textColor="#6C757D"
+                    android:layout_marginTop="2dp" />
+            </LinearLayout>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardVehiculo"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="2dp"
+        app:layout_constraintTop_toBottomOf="@id/cardUsuario"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Vehículo Vinculado"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:textColor="#2D5A43" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Modelo:"
+                    android:textColor="#6C757D"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvModeloAuto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="Honda Civic"
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Año:"
+                    android:textColor="#6C757D"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tvAnioAuto"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:text="2022"
+                    android:textStyle="bold"
+                    android:textColor="#333333"
+                    android:textSize="14sp" />
+            </RelativeLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardConexion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="4dp"
+        app:layout_constraintTop_toBottomOf="@id/cardVehiculo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Conexión del Dispositivo"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/btnBluetooth"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:src="@android:drawable/stat_sys_data_bluetooth"
+                android:contentDescription="Botón para conectar el OBD2 vía Bluetooth"
+                app:backgroundTint="#2D5A43"
+                app:fabCustomSize="90dp"
+                app:maxImageSize="45dp"
+                app:tint="@android:color/white" />
+
+            <TextView
+                android:id="@+id/tvEstadoDispositivo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="#333333"
+                android:gravity="center"
+                android:padding="8dp"
+                android:text="ELM327 - Desconectado"
+                android:textColor="@android:color/white" />
+
+            <LinearLayout
+                android:id="@+id/layoutProtocolo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#A3D9B1"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/checkbox_on_background"
+                    app:tint="#2D5A43" />
+
+                <TextView
+                    android:id="@+id/tvInfoProtocolo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Protocolo ISO 15765-4 Activo.\nNo se detectan fallos críticos (Modo 07)."
+                    android:textColor="#1E3D2F"
+                    android:textSize="12sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
