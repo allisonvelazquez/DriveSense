@@ -55,14 +55,14 @@ public class Basededatos extends SQLiteOpenHelper {
 
         return resultado != -1;
     }
-    public boolean verificarUsuario(String nombre, String password) {
+    public boolean verificarUsuario(String correo, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
 
         String query = "SELECT " + Usuario_ID + " FROM " + TABLE_USUARIOS +
-                " WHERE " + Usuario_NOMBRE + " = ? AND " + Usuario_CONTRASENA + " = ?";
+                " WHERE " + Usuario_CORREO + " = ? AND " + Usuario_CONTRASENA + " = ?";
 
         Cursor cursor = db.rawQuery(query,
-                new String[]{nombre, hashPassword(password)});
+                new String[]{correo, hashPassword(password)});
 
         boolean existe = cursor.moveToFirst();
         cursor.close();
