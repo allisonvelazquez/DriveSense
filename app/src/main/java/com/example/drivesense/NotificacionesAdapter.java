@@ -30,8 +30,6 @@ public class NotificacionesAdapter extends RecyclerView.Adapter<NotificacionesAd
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         String alerta = listaAlertas.get(position);
-
-        // Separamos el título del detalle usando un caracter de control si queremos (ej. un guión o salto)
         if (alerta.contains("\n")) {
             String[] partes = alerta.split("\n", 2);
             holder.tvMensaje.setText(partes[0]);
@@ -40,9 +38,7 @@ public class NotificacionesAdapter extends RecyclerView.Adapter<NotificacionesAd
             holder.tvMensaje.setText(alerta);
             holder.tvDetalle.setText("Evento de telemetría OBD-II registrado.");
         }
-
-        // Si la alerta es positiva (eficiente), cambiamos el color a verde de forma dinámica
-        if (alerta.toLowerCase().contains("eficiente") || alerta.toLowerCase().contains("ahorrando")) {
+         if (alerta.toLowerCase().contains("eficiente") || alerta.toLowerCase().contains("ahorrando")) {
             holder.cardFondo.setCardBackgroundColor(Color.parseColor("#E6F4EA"));
             holder.ivIcono.setColorFilter(Color.parseColor("#137333"));
             holder.tvMensaje.setTextColor(Color.parseColor("#137333"));

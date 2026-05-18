@@ -1,5 +1,6 @@
 package com.example.drivesense;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
@@ -53,12 +54,19 @@ public class LogIn extends AppCompatActivity implements View.OnClickListener{
             return;
         }
         boolean valido = basededatos.verificarUsuario(correo, contrasena);
-        if(valido){
+        if (valido) {
+            int userId = basededatos.obtenerIdUsuarioPorCorreo(correo);
+            SharedPreferences prefs = getSharedPreferences("drivesense_prefs", MODE_PRIVATE);
+            prefs.edit()
+                    .putInt("user_id", userId)
+                    .putString("user_email", correo)
+                    .apply();
+
             Toast.makeText(this, "Bienvenido", Toast.LENGTH_SHORT).show();
-            Intent intent= new Intent(LogIn.this, Principio.class);
+            Intent intent = new Intent(LogIn.this, MainActivity.class);
             startActivity(intent);
             finish();
-        }else{
+        } else {
             Toast.makeText(this, "Correo o contraseña incorrectos", Toast.LENGTH_SHORT).show();
         }
     }

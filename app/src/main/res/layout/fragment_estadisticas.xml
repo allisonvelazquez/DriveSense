@@ -44,7 +44,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:src="@android:drawable/progress_horizontal"
-            android:background="@android:color/transparent"
             tools:ignore="ContentDescription" />
 
         <TextView
@@ -101,6 +100,8 @@
         app:layout_constraintTop_toTopOf="@id/tvTituloNotificaciones"
         app:layout_constraintBottom_toBottomOf="@id/tvTituloNotificaciones"
         app:layout_constraintEnd_toEndOf="parent" />
+
+
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvNotificaciones"

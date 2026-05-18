@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.core.widget.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,12 +8,16 @@
     android:padding="24dp"
     android:background="#F8F9FA">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
     <TextView
         android:id="@+id/tvTituloPerfil"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:text="Mi Perfil"
+        android:text="Perfil"
         android:textColor="#222222"
         android:textSize="26sp"
         android:textStyle="bold"
@@ -62,7 +66,7 @@
                     android:id="@+id/tvNombreUsuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Allison Velazquez"
+                    android:text="Usuario"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="#333333" />
@@ -71,7 +75,7 @@
                     android:id="@+id/tvCorreoUsuario"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="allison.velazquez@mail.com"
+                    android:text=""
                     android:textSize="14sp"
                     android:textColor="#6C757D"
                     android:layout_marginTop="2dp" />
@@ -80,79 +84,77 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cardVehiculo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        app:cardCornerRadius="16dp"
-        app:cardElevation="2dp"
-        app:layout_constraintTop_toBottomOf="@id/cardUsuario"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <LinearLayout
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cardVehiculo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="16dp">
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp"
+            app:layout_constraintTop_toBottomOf="@id/cardUsuario"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Vehículo Vinculado"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                android:textColor="#2D5A43" />
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp">
+                android:orientation="vertical"
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Modelo:"
-                    android:textColor="#6C757D"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/tvModeloAuto"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:text="Honda Civic"
+                    android:text="Vehículo Vinculado"
+                    android:textSize="14sp"
                     android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-            </RelativeLayout>
+                    android:textColor="#2D5A43" />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp">
+                <RelativeLayout
+                    android:id="@+id/layoutInfoVehiculo"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Modelo:"
+                        android:textColor="#6C757D"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/tvModeloAuto"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:text=""
+                        android:textStyle="bold"
+                        android:textColor="#333333"
+                        android:textSize="14sp" />
+                </RelativeLayout>
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tvSinVehiculo"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Año:"
+                    android:layout_marginTop="12dp"
+                    android:text="No hay vehículo vinculado. Conecta OBD para vincular uno."
                     android:textColor="#6C757D"
-                    android:textSize="14sp" />
+                    android:textSize="14sp"
+                    android:visibility="gone" />
 
-                <TextView
-                    android:id="@+id/tvAnioAuto"
+                <Button
+                    android:id="@+id/btnReplaceVehicle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:text="2022"
-                    android:textStyle="bold"
-                    android:textColor="#333333"
-                    android:textSize="14sp" />
-            </RelativeLayout>
+                    android:text="Reemplazar vehículo"
+                    android:visibility="gone"
+                    android:backgroundTint="#E07A5F"
+                    android:textColor="@android:color/white"
+                    android:layout_marginTop="8dp"/>
 
-        </LinearLayout>
-    </androidx.cardview.widget.CardView>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardConexion"
@@ -234,4 +236,8 @@
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="24dp" />
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

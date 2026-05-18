@@ -1,6 +1,5 @@
 package com.example.drivesense;
 
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,55 +8,45 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
-public class ViajeAdapter extends RecyclerView.Adapter<ViajeAdapter.ViajeViewHolder> {
+public class ViajeAdapter extends RecyclerView.Adapter<ViajeAdapter.ViewHolder> {
 
-    private final List<Viaje> listaViajes;
+    private final List<Viaje> items;
 
-    public ViajeAdapter(List<Viaje> listaViajes) {
-        this.listaViajes = listaViajes;
+    public ViajeAdapter(List<Viaje> items) {
+        this.items = items;
     }
 
     @NonNull
     @Override
-    public ViajeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViajeAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_viaje, parent, false);
-        return new ViajeViewHolder(v);
+        return new ViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViajeViewHolder holder, int position) {
-        Viaje viaje = listaViajes.get(position);
-
-        holder.tvFecha.setText(viaje.getFecha());
-        holder.tvRuta.setText(viaje.getRuta());
-        holder.tvDetalle.setText(viaje.getInfoDistancia());
-        holder.tvCO2.setText(String.valueOf(viaje.getEmisionCO2()));
-
-        if (viaje.isEsEficiente()) {
-            holder.viewColor.setBackgroundColor(Color.parseColor("#137333"));
-            holder.tvCO2.setTextColor(Color.parseColor("#137333"));
-        } else {
-            holder.viewColor.setBackgroundColor(Color.parseColor("#A51D24"));
-            holder.tvCO2.setTextColor(Color.parseColor("#A51D24"));
-        }
+    public void onBindViewHolder(@NonNull ViajeAdapter.ViewHolder holder, int position) {
+        Viaje v = items.get(position);
+        holder.tvInicio.setText(v.inicioTexto);
+        holder.tvRuta.setText(v.rutaTexto);
+        holder.tvResumen.setText(v.resumen);
+        holder.tvKm.setText(String.format("%.1f km", v.kmEstimados));
+        holder.tvGco2.setText(String.format("%.1f gCO2", v.gco2Estimado));
     }
 
     @Override
     public int getItemCount() {
-        return listaViajes.size();
+        return items.size();
     }
 
-    public static class ViajeViewHolder extends RecyclerView.ViewHolder {
-        View viewColor;
-        TextView tvFecha, tvRuta, tvDetalle, tvCO2;
-
-        public ViajeViewHolder(@NonNull View itemView) {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvInicio, tvRuta, tvResumen, tvKm, tvGco2;
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-            viewColor = itemView.findViewById(R.id.viewStatusColor);
-            tvFecha = itemView.findViewById(R.id.tvViajeFecha);
-            tvRuta = itemView.findViewById(R.id.tvViajeRuta);
-            tvDetalle = itemView.findViewById(R.id.tvViajeDetalleDistancia);
-            tvCO2 = itemView.findViewById(R.id.tvViajeValorCO2);
+            tvInicio = itemView.findViewById(R.id.tvInicioViaje);
+            tvRuta = itemView.findViewById(R.id.tvRutaViaje);
+            tvResumen = itemView.findViewById(R.id.tvResumenViaje);
+            tvKm = itemView.findViewById(R.id.tvKmViaje);
+            tvGco2 = itemView.findViewById(R.id.tvGco2Viaje);
         }
     }
 }
