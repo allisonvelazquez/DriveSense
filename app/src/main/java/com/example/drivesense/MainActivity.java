@@ -1,22 +1,20 @@
 package com.example.drivesense;
 
+import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.drivesense.databinding.ActivityMainBinding;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.annotation.Nullable;
 
 public class MainActivity extends AppCompatActivity {
 
     ActivityMainBinding binding;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +41,26 @@ public class MainActivity extends AppCompatActivity {
 
             return true;
         });
+        handleIncomingIntent(getIntent());
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleIncomingIntent(intent);
+    }
+    private void handleIncomingIntent(@Nullable Intent intent) {
+        if (intent == null) return;
+        String open = intent.getStringExtra("open_fragment");
+        String focus = intent.getStringExtra("focus_field");
+        if ("buscar_ruta".equals(open)) {
+            BuscarRutaFragment frag = new BuscarRutaFragment();
+            Bundle args = new Bundle();
+            if (focus != null) args.putString("focus_field", focus);
+            frag.setArguments(args);
+            replaceFragment(frag);
+            binding.bottomNavigationView.setSelectedItemId(R.id.buscar);
+        }
     }
     private void replaceFragment(Fragment fragment){
         FragmentManager fragmentManager = getSupportFragmentManager();

@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.drivesense.databinding.FragmentBuscarRutaBinding;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
+
+
 
 public class BuscarRutaFragment extends Fragment {
 
@@ -29,7 +34,15 @@ public class BuscarRutaFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        EditText etUbi = view.findViewById(R.id.etBuscarDestino);
+        Bundle args = getArguments();
+        if (args != null && "etBuscarDestino".equals(args.getString("focus_field"))) {
+            etUbi.post(() -> {
+                etUbi.requestFocus();
+                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                if (imm != null) imm.showSoftInput(etUbi, InputMethodManager.SHOW_IMPLICIT);
+            });
+        }
         binding.etBuscarDestino.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {

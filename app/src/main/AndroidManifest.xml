@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DriveSense">
         <activity
+            android:name=".ResumenViaje"
+            android:exported="false" />
+        <activity
             android:name=".TelemetryActivity"
             android:exported="false" />
         <activity

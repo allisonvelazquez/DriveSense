@@ -12,7 +12,7 @@ import java.security.NoSuchAlgorithmException;
 public class Basededatos extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "drivesense.db";
-    private static final int DATABASE_VERSION = 3;
+    private static final int DATABASE_VERSION = 4;
 
     public static final String TABLE_USUARIOS = "usuarios";
     public static final String Usuario_ID = "id_usuario";
@@ -43,8 +43,7 @@ public class Basededatos extends SQLiteOpenHelper {
                         "vin TEXT," +
                         "make TEXT," +
                         "model TEXT," +
-                        "year INTEGER," +
-                        "created_at TEXT DEFAULT (datetime('now'))" +
+                        "year INTEGER" +
                         ");";
         db.execSQL(createVehicles);
 
@@ -60,15 +59,30 @@ public class Basededatos extends SQLiteOpenHelper {
                         "fuel_rate REAL," +
                         "lat REAL," +
                         "lon REAL," +
-                        "synced INTEGER DEFAULT 0" +
+                        "synced INTEGER DEFAULT 0," +
+                        "viaje_id INTEGER DEFAULT -1"+
                         ");";
         db.execSQL(createTelemetry);
+        String createViaje =
+                "CREATE TABLE viajes ("+
+                        "id INTEGER PRIMARY KEY AUTOINCREMENT,"+
+                        "vehicle_id INTEGER NOT NULL,"+
+                        "start_ts TEXT NOT NULL,"+
+                        "end_ts TEXT NOT NULL,"+
+                        "distance_km REAL,"+
+                        "duration INTEGER,"+
+                        "avg_consumption REAL,"+
+                        "gco2 REAL,"+
+                        "score INTEGER"+
+                        ");";
+        db.execSQL(createViaje);
     }
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USUARIOS);
         db.execSQL("DROP TABLE IF EXISTS vehicles");
         db.execSQL("DROP TABLE IF EXISTS telemetry");
+        db.execSQL("DROP TABLE IF EXISTS viajes");
         onCreate(db);
     }
 
@@ -249,5 +263,11 @@ public class Basededatos extends SQLiteOpenHelper {
         }
         c.close();
         return sb.toString();
+    }
+
+    public Cursor obtenerViajePorId(int viajeId) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String q = "SELECT * FROM viajes WHERE id = ?";
+        return db.rawQuery(q, new String[]{String.valueOf(viajeId)});
     }
 }
