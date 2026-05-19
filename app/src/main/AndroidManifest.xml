@@ -12,31 +12,38 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DriveSense">
         <activity
+            android:name=".ResumenViaje"
+            android:exported="false" />
+        <activity
+            android:name=".TelemetryActivity"
+            android:exported="false" />
+        <activity
             android:name=".Inicio"
             android:exported="true"
             android:theme="@style/Theme.DriveSense">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".LogIn"
             android:exported="true"
             android:theme="@style/Theme.DriveSense">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:exported="true"
             android:theme="@style/Theme.DriveSense">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -46,15 +53,7 @@
             android:theme="@style/Theme.DriveSense">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
-        <activity
-            android:name=".Principio"
-            android:exported="true"
-            android:theme="@style/Theme.DriveSense">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>

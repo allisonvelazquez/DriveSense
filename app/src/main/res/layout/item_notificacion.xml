@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="#FCE8E6"> <LinearLayout
+    android:id="@+id/layoutItemFondo"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:padding="14dp">
+
+    <ImageView
+        android:id="@+id/ivItemIcono"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:src="@android:drawable/stat_notify_error"
+        app:tint="#A51D24"
+        android:contentDescription="Icono Alerta" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="14dp">
+
+        <TextView
+            android:id="@+id/tvItemMensaje"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Aceleración brusca detectada"
+            android:textColor="#A51D24"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvItemDetalle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="+10% de consumo estimado en la zona"
+            android:textColor="#555555"
+            android:textSize="12sp"
+            android:layout_marginTop="2dp"/>
+    </LinearLayout>
+</LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -7,4 +7,9 @@
     <color name="drive_light_green">#D8F3DC</color>
     <color name="hint_color">#95A5A6</color>
     <color name="input_border">#E0E0E0</color>
+    <color name="gauge_green">#2E7D32</color>
+    <color name="gauge_yellow">#F9A825</color>
+    <color name="gauge_orange">#EF6C00</color>
+    <color name="gauge_red">#C62828</color>
+
 </resources>
