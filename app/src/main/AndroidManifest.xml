@@ -11,6 +11,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.DriveSense">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCIgMOzVfpak7gOdYa4mEuOS1vrQGqeBOI"/>
         <activity
             android:name=".ResumenViaje"
             android:exported="false" />
@@ -49,6 +52,16 @@
         </activity>
         <activity
             android:name=".Registro"
+            android:exported="true"
+            android:theme="@style/Theme.DriveSense">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".BuscarRutaFragment"
             android:exported="true"
             android:theme="@style/Theme.DriveSense">
             <intent-filter>

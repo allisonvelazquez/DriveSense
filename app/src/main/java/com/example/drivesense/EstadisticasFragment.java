@@ -32,6 +32,7 @@ public class EstadisticasFragment extends Fragment {
     private int selectedVehicleId = -1;
     private static final int REFRESH_MS = 3000;
     private static final int TELEMETRY_LIMIT = 50;
+    private int simTick = 0;
 
     @Nullable
     @Override
@@ -58,9 +59,9 @@ public class EstadisticasFragment extends Fragment {
         binding.rvNotificaciones.setAdapter(adapter);
 
         binding.btnLimpiarAlertas.setOnClickListener(v -> {
-            int tamaño = listaAlertas.size();
+            int size = listaAlertas.size();
             listaAlertas.clear();
-            adapter.notifyItemRangeRemoved(0, tamaño);
+            adapter.notifyItemRangeRemoved(0, size);
             Toast.makeText(getContext(), "Feed de alertas despejado", Toast.LENGTH_SHORT).show();
         });
 
@@ -86,24 +87,18 @@ public class EstadisticasFragment extends Fragment {
     }
 
     private void actualizarEstadisticas() {
-        if (selectedVehicleId == -1) {
-            binding.tvValorConsumo.setText("--");
-            binding.tvTituloHeader.setText("Consumo (sin vehículo)");
-            return;
-        }
-
-        Cursor c = db.obtenerTelemetriaPorVehiculo(selectedVehicleId, TELEMETRY_LIMIT);
+        Cursor c;
         List<TelemetryRecord> recs = new ArrayList<>();
-        while (c.moveToNext()) {
-            recs.add(TelemetryRecord.fromCursor(c));
-        }
-        c.close();
-
-        if (recs.isEmpty()) {
-            binding.tvValorConsumo.setText("--");
+        if (selectedVehicleId != -1) {
+            c = db.obtenerTelemetriaPorVehiculo(selectedVehicleId, TELEMETRY_LIMIT);
+            while (c.moveToNext()) {
+                recs.add(TelemetryRecord.fromCursor(c));
+            }
+            c.close();
+        }if (recs.isEmpty()) {
+            ejecutarSimulacionDemo();
             return;
         }
-
         double sumRpm = 0;
         int countRpm = 0;
         for (TelemetryRecord r : recs) {
@@ -149,10 +144,35 @@ public class EstadisticasFragment extends Fragment {
         }
     }
 
+    private void ejecutarSimulacionDemo() {
+        simTick++;
+        int gco2Simulado = 140 + (int) (Math.sin(simTick) * 12) + (simTick % 3);
+        int rpmSimulada = 2100 + (int) (Math.sin(simTick) * 350);
+
+        binding.tvValorConsumo.setText(String.valueOf(gco2Simulado));
+        binding.tvTituloHeader.setText(String.format(Locale.getDefault(), "Consumo Demo (RPM avg: %d)", rpmSimulada));
+        switch (simTick) {
+            case 1:
+                agregarNuevaAlerta("Aceleración brusca detectada\nSe registró un pico súbito de +1800 RPM.");
+                break;
+            case 2:
+                agregarNuevaAlerta("Aumento de consumo\nEl flujo de combustible superó los 4.5 L/h momentáneamente.");
+                break;
+            case 3:
+                agregarNuevaAlerta("Conducción eficiente\n¡Excelente! Mantienes una marcha estable y estás ahorrando.");
+                break;
+            default:if (simTick % 5 == 0) {
+                agregarNuevaAlerta("Frenado fuerte detectado\nReducción de velocidad drástica por debajo del promedio.");
+            }
+                break;
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         handler.removeCallbacks(refrescarRunnable);
         binding = null;
     }
+
 }
