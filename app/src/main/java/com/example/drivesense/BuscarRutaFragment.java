@@ -1,77 +1,307 @@
 package com.example.drivesense;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.inputmethod.EditorInfo;
-import android.widget.EditText;
-import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.example.drivesense.databinding.FragmentBuscarRutaBinding;
-import android.view.inputmethod.InputMethodManager;
-import android.content.Context;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
+import com.google.android.libraries.places.api.Places;
+import com.google.android.libraries.places.api.model.Place;
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 
+import java.util.Arrays;
 
-public class BuscarRutaFragment extends Fragment {
+public class BuscarRutaFragment extends Fragment implements OnMapReadyCallback {
 
-    private FragmentBuscarRutaBinding binding;
+    private GoogleMap mMap;
+
+    private AutocompleteSupportFragment autocompleteOrigen;
+    private AutocompleteSupportFragment autocompleteDestino;
+
+    private Button btnAgregarOrigen;
+    private Button btnAgregarDestino;
+    private Button btnCalcular;
+
+    private LatLng origenLatLng;
+    private LatLng destinoLatLng;
+
+    private String origenTexto = "";
+    private String destinoTexto = "";
+
+    private Marker marcadorOrigen;
+    private Marker marcadorDestino;
+
+    public BuscarRutaFragment() {
+    }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentBuscarRutaBinding.inflate(inflater, container, false);
-        return binding.getRoot();
-    }
+    public View onCreateView(@NonNull LayoutInflater inflater,
+                             @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        EditText etUbi = view.findViewById(R.id.etBuscarDestino);
-        Bundle args = getArguments();
-        if (args != null && "etBuscarDestino".equals(args.getString("focus_field"))) {
-            etUbi.post(() -> {
-                etUbi.requestFocus();
-                InputMethodManager imm = (InputMethodManager) requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-                if (imm != null) imm.showSoftInput(etUbi, InputMethodManager.SHOW_IMPLICIT);
-            });
+        View view = inflater.inflate(
+                R.layout.fragment_buscar_ruta,
+                container,
+                false
+        );
+
+        String apiKey = "AIzaSyCIgMOzVfpak7gOdYa4mEuOS1vrQGqeBOI";
+
+        if (!Places.isInitialized()) {
+
+            Places.initialize(
+                    requireContext(),
+                    apiKey
+            );
         }
-        binding.etBuscarDestino.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_SEARCH || (event != null && event.getKeyCode() == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN)) {
-                    String destino = binding.etBuscarDestino.getText().toString().trim();
 
-                    if (!destino.isEmpty()) {
-                        binding.cardAccionRuta.setVisibility(View.VISIBLE);
-                        binding.tvTagEco.setText("EcoRuta hacia " + destino);
-                        Toast.makeText(getContext(), "Calculando la ruta más ecológica...", Toast.LENGTH_SHORT).show();
-                    } else {
-                        binding.cardAccionRuta.setVisibility(View.GONE);
+        btnAgregarOrigen = view.findViewById(R.id.btnAgregarOrigen);
+        btnAgregarDestino = view.findViewById(R.id.btnAgregarDestino);
+        btnCalcular = view.findViewById(R.id.btnCalcular);
+
+        autocompleteOrigen = (AutocompleteSupportFragment)
+                getChildFragmentManager()
+                        .findFragmentById(R.id.autocompleteOrigen);
+
+        autocompleteDestino = (AutocompleteSupportFragment)
+                getChildFragmentManager()
+                        .findFragmentById(R.id.autocompleteDestino);
+
+        if (autocompleteOrigen != null) {
+
+            autocompleteOrigen.setPlaceFields(Arrays.asList(
+                    Place.Field.ID,
+                    Place.Field.NAME,
+                    Place.Field.ADDRESS,
+                    Place.Field.LAT_LNG
+            ));
+
+            autocompleteOrigen.setOnPlaceSelectedListener(
+                    new PlaceSelectionListener() {
+
+                        @Override
+                        public void onPlaceSelected(@NonNull Place place) {
+
+                            origenLatLng = place.getLatLng();
+
+                            if (place.getAddress() != null) {
+                                origenTexto = place.getAddress();
+                            } else {
+                                origenTexto = place.getName();
+                            }
+
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Origen seleccionado",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+
+                        @Override
+                        public void onError(@NonNull Status status) {
+
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Error origen: "
+                                            + status.getStatusMessage(),
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
                     }
-                    return false;
-                }
-                return false;
-            }
+            );
+        }
+
+        if (autocompleteDestino != null) {
+
+            autocompleteDestino.setPlaceFields(Arrays.asList(
+                    Place.Field.ID,
+                    Place.Field.NAME,
+                    Place.Field.ADDRESS,
+                    Place.Field.LAT_LNG
+            ));
+
+            autocompleteDestino.setOnPlaceSelectedListener(
+                    new PlaceSelectionListener() {
+
+                        @Override
+                        public void onPlaceSelected(@NonNull Place place) {
+
+                            destinoLatLng = place.getLatLng();
+
+                            if (place.getAddress() != null) {
+                                destinoTexto = place.getAddress();
+                            } else {
+                                destinoTexto = place.getName();
+                            }
+
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Destino seleccionado",
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+
+                        @Override
+                        public void onError(@NonNull Status status) {
+
+                            Toast.makeText(
+                                    requireContext(),
+                                    "Error destino: "
+                                            + status.getStatusMessage(),
+                                    Toast.LENGTH_SHORT
+                            ).show();
+                        }
+                    }
+            );
+        }
+
+        btnAgregarOrigen.setOnClickListener(v -> agregarOrigenEnMapa());
+
+        btnAgregarDestino.setOnClickListener(v -> agregarDestinoEnMapa());
+
+        btnCalcular.setOnClickListener(v -> {
+
+            Intent intent = new Intent(
+                    requireContext(),
+                    ResumenViaje.class
+            );
+
+            startActivity(intent);
         });
-        binding.btnIniciarRuta.setOnClickListener(v -> {
-            String destino = binding.etBuscarDestino.getText().toString().trim();
-            if (!destino.isEmpty()) {
-                Toast.makeText(getContext(), "¡Navegación iniciada hacia " + destino + "!", Toast.LENGTH_LONG).show();
-                //  fragmento de la ruta ???????
-            }
-        });
+
+        SupportMapFragment mapFragment =
+                (SupportMapFragment)
+                        getChildFragmentManager()
+                                .findFragmentById(R.id.mapContainer);
+
+        if (mapFragment != null) {
+            mapFragment.getMapAsync(this);
+        }
+
+        return view;
     }
+
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        binding = null;
+    public void onMapReady(@NonNull GoogleMap googleMap) {
+
+        mMap = googleMap;
+
+        LatLng inicio = new LatLng(20.6597, -103.3496);
+
+        mMap.moveCamera(
+                CameraUpdateFactory.newLatLngZoom(inicio, 12f)
+        );
+    }
+
+    private void agregarOrigenEnMapa() {
+
+        if (mMap == null) return;
+
+        if (origenLatLng == null) {
+
+            Toast.makeText(
+                    requireContext(),
+                    "Selecciona un origen",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            return;
+        }
+
+        if (marcadorOrigen != null) {
+            marcadorOrigen.remove();
+        }
+
+        marcadorOrigen = mMap.addMarker(
+                new MarkerOptions()
+                        .position(origenLatLng)
+                        .title("Origen")
+                        .snippet(origenTexto)
+        );
+
+        moverCamara();
+    }
+
+    private void agregarDestinoEnMapa() {
+
+        if (mMap == null) return;
+
+        if (destinoLatLng == null) {
+
+            Toast.makeText(
+                    requireContext(),
+                    "Selecciona un destino",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            return;
+        }
+
+        if (marcadorDestino != null) {
+            marcadorDestino.remove();
+        }
+
+        marcadorDestino = mMap.addMarker(
+                new MarkerOptions()
+                        .position(destinoLatLng)
+                        .title("Destino")
+                        .snippet(destinoTexto)
+        );
+
+        moverCamara();
+    }
+
+    private void moverCamara() {
+
+        if (mMap == null) return;
+
+        if (origenLatLng != null && destinoLatLng != null) {
+
+            LatLngBounds bounds = new LatLngBounds.Builder()
+                    .include(origenLatLng)
+                    .include(destinoLatLng)
+                    .build();
+
+            mMap.animateCamera(
+                    CameraUpdateFactory.newLatLngBounds(bounds, 150)
+            );
+
+        } else if (origenLatLng != null) {
+
+            mMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                            origenLatLng,
+                            15f
+                    )
+            );
+
+        } else if (destinoLatLng != null) {
+
+            mMap.animateCamera(
+                    CameraUpdateFactory.newLatLngZoom(
+                            destinoLatLng,
+                            15f
+                    )
+            );
+        }
     }
 }

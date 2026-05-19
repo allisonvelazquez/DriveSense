@@ -44,17 +44,19 @@ public class RegistroViajesFragment extends Fragment {
         binding.rvHistorialViajes.setLayoutManager(new LinearLayoutManager(getContext()));
 
         List<Viaje> viajes = reconstruirViajes(selectedVehicleId);
+        if (viajes.isEmpty()) {
+            viajes = obtenerViajesDeDemostracion();
+        }
         ViajeAdapter adapter = new ViajeAdapter(viajes);
         binding.rvHistorialViajes.setAdapter(adapter);
 
-        // KPIs calculados a partir de los viajes
         double totalKm = 0;
         double totalGco2 = 0;
         int score = 0;
         for (Viaje v : viajes) {
             totalKm += v.kmEstimados;
             totalGco2 += v.gco2Estimado;
-            score += Math.max(0, Math.min(100, (int)(100 - v.kmEstimados))); // heurística demo
+            score += Math.max(0, Math.min(100, (int)(100 - v.kmEstimados)));
         }
         binding.tvKpiDistancia.setText(String.format(Locale.getDefault(), "%.1f km", totalKm));
         binding.tvKpiAhorro.setText(String.format(Locale.getDefault(), "%.2f kg", totalGco2 / 1000.0)); // g -> kg
@@ -83,7 +85,6 @@ public class RegistroViajesFragment extends Fragment {
                 continue;
             }
             if (tsMs - lastTsMs > GAP_MS) {
-                // finalizar buffer como viaje
                 Viaje v = summarizeBufferAsViaje(buffer, sdf);
                 if (v != null) salida.add(v);
                 buffer.clear();
@@ -110,7 +111,6 @@ public class RegistroViajesFragment extends Fragment {
     }
     private Viaje summarizeBufferAsViaje(List<TelemetryRecord> buffer, SimpleDateFormat sdf) {
         if (buffer == null || buffer.isEmpty()) return null;
-        // calcular distancia acumulada
         double totalKm = 0.0;
         TelemetryRecord prev = null;
         for (TelemetryRecord r : buffer) {
@@ -119,10 +119,8 @@ public class RegistroViajesFragment extends Fragment {
             }
             prev = r;
         }
-        // gCO2 estimado
         double gco2 = Utils.estimarGCO2(buffer) * Math.max(1.0, totalKm); // ajuste demo
 
-        // inicio y resumen
         String inicio = buffer.get(0).timestamp != null ? buffer.get(0).timestamp.replace('T', ' ') : "—";
         String resumen = String.format(Locale.getDefault(), "%.1f km  •  %d min",
                 totalKm,
@@ -132,7 +130,6 @@ public class RegistroViajesFragment extends Fragment {
         return new Viaje(inicio, ruta, resumen, totalKm, gco2);
     }
 
-    // Haversine en km
     private double haversineKm(double lat1, double lon1, double lat2, double lon2) {
         final int R = 6371; // km
         double dLat = Math.toRadians(lat2 - lat1);
@@ -148,5 +145,33 @@ public class RegistroViajesFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+    private List<Viaje> obtenerViajesDeDemostracion() {
+        List<Viaje> demo = new ArrayList<>();
+        demo.add(new Viaje(
+                "2026-05-18 19:40:10",
+                "Coyula ➔ Cucei",
+                "11.8 km  •  30 min",
+                11.8,
+                1200.0
+        ));
+
+        demo.add(new Viaje(
+                "2026-05-17 14:15:00",
+                "Gran Terraza ➔ Bodega Aurrera",
+                "8.7 km  •  24 min",
+                8.7,
+                610.0
+        ));
+
+        demo.add(new Viaje(
+                "2026-05-16 08:30:22",
+                "Rio Nilo ➔ Coyula",
+                "8.3 km  •  22 min",
+                8.3,
+                600.0 // en gramos de CO2
+        ));
+
+        return demo;
     }
 }
